@@ -1,0 +1,110 @@
+body {
+    background-color: #f4f7fc;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* Navbar */
+.navbar {
+    padding: 15px;
+}
+
+.navbar-brand {
+    font-size: 24px;
+}
+
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(to right, #4e73df, #224abe);
+    color: white;
+    padding: 80px 40px;
+    border-radius: 20px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.hero-section h1 {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.hero-section p {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+
+/* Buttons */
+.custom-btn {
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+
+/* Cards */
+.feature-card {
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    transition: 0.3s;
+    background-color: white;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+}
+
+
+/* Dashboard Cards */
+.dashboard-card {
+    border-radius: 20px;
+    padding: 25px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+.income-card {
+    background: #1cc88a;
+}
+
+.expense-card {
+    background: #e74a3b;
+}
+
+.balance-card {
+    background: #4e73df;
+}
+
+
+/* Forms */
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.btn {
+    border-radius: 10px;
+}
+
+
+/* Tables */
+table {
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+
+/* Footer */
+.footer {
+    margin-top: 50px;
+    padding: 20px;
+    text-align: center;
+    color: gray;
+}

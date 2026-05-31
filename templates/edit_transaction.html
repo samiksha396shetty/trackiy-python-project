@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+        <div class="card shadow border-0 p-5">
+
+            <h2 class="mb-4 text-center">
+
+                Edit Transaction
+
+            </h2>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Title
+
+                    </label>
+
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           value="{{ transaction.title }}"
+                           required>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Amount
+
+                    </label>
+
+                    <input type="number"
+                           name="amount"
+                           class="form-control"
+                           value="{{ transaction.amount }}"
+                           required>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Category
+
+                    </label>
+
+                    <input type="text"
+                           name="category"
+                           class="form-control"
+                           value="{{ transaction.category }}"
+                           required>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Type
+
+                    </label>
+
+                    <select name="type"
+                            class="form-control">
+
+                        <option value="Income"
+                            {% if transaction.type == 'Income' %}
+                                selected
+                            {% endif %}>
+
+                            Income
+
+                        </option>
+
+                        <option value="Expense"
+                            {% if transaction.type == 'Expense' %}
+                                selected
+                            {% endif %}>
+
+                            Expense
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Date
+
+                    </label>
+
+                    <input type="date"
+                           name="date"
+                           class="form-control"
+                           value="{{ transaction.date }}"
+                           required>
+
+                </div>
+
+
+                <button class="btn btn-success w-100">
+
+                    Update Transaction
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

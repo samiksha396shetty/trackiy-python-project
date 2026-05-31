@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+        <div class="card shadow border-0 p-4">
+
+            <h2 class="mb-4 text-center">
+
+                My Profile
+
+            </h2>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Name
+
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       value="{{ current_user.name }}"
+                       readonly>
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Email
+
+                </label>
+
+                <input type="email"
+                       class="form-control"
+                       value="{{ current_user.email }}"
+                       readonly>
+
+            </div>
+
+
+            <hr>
+
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        New Password
+
+                    </label>
+
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           required>
+
+                </div>
+
+
+                <button class="btn btn-primary w-100">
+
+                    Update Password
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

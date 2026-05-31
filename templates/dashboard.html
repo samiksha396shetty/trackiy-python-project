@@ -1,0 +1,651 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h1>
+        Welcome, {{ current_user.name }}
+    </h1>
+
+    {% if warning_message %}
+
+<div class="alert alert-danger mt-3">
+
+    {{ warning_message }}
+
+</div>
+
+{% endif %}
+
+    <div>
+
+        <a href="/add_transaction"
+           class="btn btn-primary">
+
+            Add Transaction
+
+        </a>
+
+        <a href="/download_report"
+           class="btn btn-success ms-2">
+
+            Download PDF
+
+        </a>
+
+        <a href="/download_csv"
+           class="btn btn-secondary ms-2">
+
+            Download CSV
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- SUMMARY CARDS -->
+
+<div class="row">
+
+    <!-- BALANCE -->
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow border-0 p-4">
+
+            <h3>Total Balance</h3>
+
+            <h2>
+                ₹ {{ total_balance }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- INCOME -->
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow border-0 p-4">
+
+            <h3>Total Income</h3>
+
+            <h2 class="text-success">
+                ₹ {{ total_income }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXPENSE -->
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow border-0 p-4">
+
+            <h3>Total Expense</h3>
+
+            <h2 class="text-danger">
+                ₹ {{ total_expense }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXTRA STATISTICS -->
+
+<div class="row">
+
+    <!-- TOTAL TRANSACTIONS -->
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow border-0 p-4">
+
+            <h4>Total Transactions</h4>                                        
+
+            <h2 class="text-primary">
+
+                {{ total_transactions }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- HIGHEST INCOME -->
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow border-0 p-4">
+
+            <h4>Highest Income</h4>
+
+            <h2 class="text-success">
+
+                ₹ {{ highest_income }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- HIGHEST EXPENSE -->
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow border-0 p-4">
+
+            <h4>Highest Expense</h4>
+
+            <h2 class="text-danger">
+
+                ₹ {{ highest_expense }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+</div>
+
+
+
+
+<!-- SEARCH + FILTER -->
+
+<form method="GET"
+      action="/dashboard"
+      class="mb-4">
+
+    <div class="row g-3">
+
+        <!-- SEARCH -->
+
+        <div class="col-md-4">
+
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Search transaction title..."
+                   value="{{ request.args.get('search', '') }}">
+
+        </div>
+
+
+        <!-- FILTER TYPE -->
+
+        <div class="col-md-3">
+
+            <select name="type"
+                    class="form-select">
+
+                <option value="All"
+                    {% if filter_type == 'All' %}
+                        selected
+                    {% endif %}>
+
+                    All Transactions
+
+                </option>
+
+                <option value="Income"
+                    {% if filter_type == 'Income' %}
+                        selected
+                    {% endif %}>
+
+                    Income
+
+                </option>
+
+                <option value="Expense"
+                    {% if filter_type == 'Expense' %}
+                        selected
+                    {% endif %}>
+
+                    Expense
+
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- DATE FILTER -->
+
+        <div class="col-md-3">
+
+            <input type="date"
+                   name="date"
+                   class="form-control"
+                   value="{{ selected_date }}">
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <div class="col-md-2 d-grid">
+
+            <button class="btn btn-dark">
+
+                Apply Filters
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+
+<!-- TRANSACTION TABLE -->
+
+<div class="card shadow border-0 p-4 mt-4">
+
+    <h3 class="mb-4">
+
+        Recent Transactions
+
+    </h3>
+
+    <table class="table table-hover">
+
+        <thead>
+
+            <tr>
+
+                <th>Title</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for transaction in transactions.items %}
+
+    {% if transaction.type == 'Income' %}
+
+        <tr class="table-success">
+
+    {% else %}
+
+        <tr class="table-danger">
+
+    {% endif %}
+
+        <td>
+            {{ transaction.title }}
+        </td>
+
+        <td>
+            {{ transaction.category }}
+        </td>
+
+        <td>
+
+            {% if transaction.type == 'Income' %}
+
+                <span class="text-success">
+
+                    + ₹ {{ transaction.amount }}
+
+                </span>
+
+            {% else %}
+
+                <span class="text-danger">
+
+                    - ₹ {{ transaction.amount }}
+
+                </span>
+
+            {% endif %}
+
+        </td>
+
+        <td>
+            {{ transaction.date }}
+        </td>
+
+        <td>
+
+            <a href="/edit_transaction/{{ transaction.id }}"
+               class="btn btn-warning btn-sm me-2">
+
+                Edit
+
+            </a>
+
+            <a href="/delete_transaction/{{ transaction.id }}"
+               class="btn btn-danger btn-sm">
+
+                Delete
+
+            </a>
+
+        </td>
+
+    </tr>
+
+{% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- PAGINATION -->
+
+<div class="d-flex justify-content-center mt-4">
+
+    {% if transactions.has_prev %}
+
+        <a href="{{ url_for(
+            'dashboard',
+            page=transactions.prev_num
+        ) }}"
+           class="btn btn-dark me-2">
+
+            Previous
+
+        </a>
+
+    {% endif %}
+
+
+    {% if transactions.has_next %}
+
+        <a href="{{ url_for(
+            'dashboard',
+            page=transactions.next_num
+        ) }}"
+           class="btn btn-dark">
+
+            Next
+
+        </a>
+
+    {% endif %}
+
+</div>
+
+
+<!-- EXPENSE ANALYTICS -->
+
+<div class="card shadow border-0 p-4 mt-5">
+
+    <h3 class="mb-4 text-center">
+
+        Expense Analytics
+
+    </h3>
+
+    <div style="width: 55%; margin: auto;">
+
+        <canvas id="expenseChart"></canvas>
+
+    </div>
+
+</div>
+
+
+
+<!-- MONTHLY GRAPH -->
+
+<div class="card shadow border-0 p-4 mt-5">
+
+    <h3 class="mb-4 text-center">
+
+        Monthly Expense Graph
+
+    </h3>
+
+    <div style="width: 75%; margin: auto;">
+
+        <canvas id="monthlyChart"></canvas>
+
+    </div>
+
+</div>
+
+
+
+<!-- CATEGORY GRAPH -->
+
+<div class="card shadow border-0 p-4 mt-5">
+
+    <h3 class="mb-4 text-center">
+
+        Category Wise Expenses
+
+    </h3>
+
+    <div style="width: 60%; margin: auto;">
+
+        <canvas id="categoryChart"></canvas>
+
+    </div>
+
+</div>
+
+
+
+<!-- CHART SCRIPT -->
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // CHECK CHART JS
+
+    if (typeof Chart === 'undefined') {
+
+        console.log('Chart.js not loaded');
+
+        return;
+
+    }
+
+
+    // =========================
+    // DOUGHNUT CHART
+    // =========================
+
+    const income =
+        parseFloat("{{ total_income }}") || 0;
+
+    const expense =
+        parseFloat("{{ total_expense }}") || 0;
+
+
+    const expenseCanvas =
+        document.getElementById('expenseChart');
+
+
+    new Chart(expenseCanvas, {
+
+        type: 'doughnut',
+
+        data: {
+
+            labels: ['Income', 'Expense'],
+
+            datasets: [{
+
+                label: 'Expense Analytics',
+
+                data: [income, expense],
+
+                backgroundColor: [
+
+                    '#36A2EB',
+                    '#FF6384'
+
+                ],
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true
+
+        }
+
+    });
+
+
+
+    // =========================
+    // MONTHLY BAR GRAPH
+    // =========================
+
+    const monthlyLabels =
+        JSON.parse('{{ monthly_labels | tojson | safe }}');
+
+    const monthlyAmounts =
+        JSON.parse('{{ monthly_amounts | tojson | safe }}');
+
+
+    const monthlyCanvas =
+        document.getElementById('monthlyChart');
+
+
+    new Chart(monthlyCanvas, {
+
+        type: 'bar',
+
+        data: {
+
+            labels: monthlyLabels,
+
+            datasets: [{
+
+                label: 'Monthly Expenses',
+
+                data: monthlyAmounts,
+
+                backgroundColor: '#4BC0C0',
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+
+    // =========================
+    // CATEGORY PIE CHART
+    // =========================
+
+    const categoryLabels =
+        JSON.parse('{{ category_labels | tojson | safe }}');
+
+    const categoryAmounts =
+        JSON.parse('{{ category_amounts | tojson | safe }}');
+
+
+    const categoryCanvas =
+        document.getElementById('categoryChart');
+
+
+    new Chart(categoryCanvas, {
+
+        type: 'pie',
+
+        data: {
+
+            labels: categoryLabels,
+
+            datasets: [{
+
+                label: 'Category Expenses',
+
+                data: categoryAmounts,
+
+                backgroundColor: [
+
+                    '#8E44AD',
+                    '#16A085',
+                    '#F39C12',
+                    '#E74C3C',
+                    '#3498DB',
+                    '#2ECC71',
+                    '#D35400',
+                    '#1ABC9C',
+                    '#C0392B',
+                    '#34495E'
+
+                ],
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}
